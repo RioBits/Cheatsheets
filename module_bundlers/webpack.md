@@ -13,7 +13,7 @@ module.exports = {
 ```
 
 #### Output
-
+By default its value is `./dist/main.js`
 ```js
 const path = require('path')
 
