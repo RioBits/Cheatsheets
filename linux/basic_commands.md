@@ -1,4 +1,4 @@
-# Basic Unix Commands
+# Basic Linux Commands
 
 show folders and directories
 `ls`
