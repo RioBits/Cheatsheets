@@ -250,4 +250,125 @@ setInterval(tick, 1000);
 ### React Only Updates What’s Necessary
 React DOM compares the element and its children to the previous one, and only applies the DOM updates necessary to bring the DOM to the desired state.
 
+## Components and Props
+> Components let you split the UI into independent, reusable pieces, and think about each piece in isolation. This page provides an introduction to the idea of components.
+
+### Function and Class Components
+
+The simplest way to define a component is to write a JavaScript function:
+
+```jsx
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+```
+
+You can also use an ES6 class to define a component:
+
+
+```jsx
+class Welcome extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+```
+
+### Rendering a Component
+
+```jsx
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+const element = <Welcome name="Sara" />;
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);
+```
+
+It gonna render: Hello, Sara
+
+### Composing Components
+
+```jsx
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+function App() {
+  return (
+    <div>
+      <Welcome name="Sara" />
+      <Welcome name="Cahal" />
+      <Welcome name="Edite" />
+    </div>
+  );
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);
+```
+
+### Extracting Components
+
+```jsx
+function formatDate(date) {
+  return date.toLocaleDateString();
+}
+
+function Avatar(props) {
+  return (
+    <img className="Avatar"
+         src={props.user.avatarUrl}
+         alt={props.user.name} />
+  );
+}
+
+function UserInfo(props) {
+  return (
+    <div className="UserInfo">
+      <Avatar user={props.user} />
+      <div className="UserInfo-name">
+        {props.user.name}
+      </div>
+    </div>
+  );
+}
+
+function Comment(props) {
+  return (
+    <div className="Comment">
+      <UserInfo user={props.author} />
+      <div className="Comment-text">
+        {props.text}
+      </div>
+      <div className="Comment-date">
+        {formatDate(props.date)}
+      </div>
+    </div>
+  );
+}
+
+const comment = {
+  date: new Date(),
+  text: 'I hope you enjoy learning React!',
+  author: {
+    name: 'Hello Kitty',
+    avatarUrl: 'http://placekitten.com/g/64/64'
+  }
+};
+ReactDOM.render(
+  <Comment
+    date={comment.date}
+    text={comment.text}
+    author={comment.author} />,
+  document.getElementById('root')
+);
+```
+
+> Props are Read-Only
 
