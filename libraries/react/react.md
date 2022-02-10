@@ -1791,3 +1791,421 @@ class App extends React.Component {
   }
 }
 ```
+
+## Forwarding Refs
+
+### Forwarding refs to DOM components
+
+```jsx
+function FancyButton(props) {
+  return (
+    <button className="FancyButton">
+      {props.children}
+    </button>
+  );
+}
+```
+
+```jsx
+const FancyButton = React.forwardRef((props, ref) => (
+  <button ref={ref} className="FancyButton">
+    {props.children}
+  </button>
+));
+
+// You can now get a ref directly to the DOM button:
+const ref = React.createRef();
+<FancyButton ref={ref}>Click me!</FancyButton>;
+```
+
+### Forwarding refs in higher-order components
+
+```jsx
+function logProps(WrappedComponent) {
+  class LogProps extends React.Component {
+    componentDidUpdate(prevProps) {
+      console.log('old props:', prevProps);
+      console.log('new props:', this.props);
+    }
+
+    render() {
+      return <WrappedComponent {...this.props} />;
+    }
+  }
+
+  return LogProps;
+}
+```
+
+```jsx
+class FancyButton extends React.Component {
+  focus() {
+    // ...
+  }
+
+  // ...
+}
+
+// Rather than exporting FancyButton, we export LogProps.
+// It will render a FancyButton though.
+export default logProps(FancyButton);
+```
+
+```jsx
+import FancyButton from './FancyButton';
+
+const ref = React.createRef();
+
+// The FancyButton component we imported is the LogProps HOC.
+// Even though the rendered output will be the same,
+// Our ref will point to LogProps instead of the inner FancyButton component!
+// This means we can't call e.g. ref.current.focus()
+<FancyButton
+  label="Click Me"
+  handleClick={handleClick}
+  ref={ref}
+/>;
+```
+
+```jsx
+function logProps(Component) {
+  class LogProps extends React.Component {
+    componentDidUpdate(prevProps) {
+      console.log('old props:', prevProps);
+      console.log('new props:', this.props);
+    }
+
+    render() {
+      const {forwardedRef, ...rest} = this.props;
+
+      // Assign the custom prop "forwardedRef" as a ref
+      return <Component ref={forwardedRef} {...rest} />;
+    }
+  }
+
+  // Note the second param "ref" provided by React.forwardRef.
+  // We can pass it along to LogProps as a regular prop, e.g. "forwardedRef"
+  // And it can then be attached to the Component.
+  return React.forwardRef((props, ref) => {
+    return <LogProps {...props} forwardedRef={ref} />;
+  });
+}
+```
+
+```jsx
+const WrappedComponent = React.forwardRef((props, ref) => {
+  return <LogProps {...props} forwardedRef={ref} />;
+});
+```
+
+```jsx
+const WrappedComponent = React.forwardRef(
+  function myFunction(props, ref) {
+    return <LogProps {...props} forwardedRef={ref} />;
+  }
+);
+```
+
+```jsx
+function logProps(Component) {
+  class LogProps extends React.Component {
+    // ...
+  }
+
+  function forwardRef(props, ref) {
+    return <LogProps {...props} forwardedRef={ref} />;
+  }
+
+  // Give this component a more helpful display name in DevTools.
+  // e.g. "ForwardRef(logProps(MyComponent))"
+  const name = Component.displayName || Component.name;
+  forwardRef.displayName = `logProps(${name})`;
+
+  return React.forwardRef(forwardRef);
+}
+```
+
+## Fragments
+
+```jsx
+render() {
+  return (
+    <React.Fragment>
+      <ChildA />
+      <ChildB />
+      <ChildC />
+    </React.Fragment>
+  );
+}
+```
+
+### Short Syntax
+
+```jsx
+class Columns extends React.Component {
+  render() {
+    return (
+      <>
+        <td>Hello</td>
+        <td>World</td>
+      </>
+    );
+  }
+}
+```
+
+### Keyed Fragments
+
+```jsx
+function Glossary(props) {
+  return (
+    <dl>
+      {props.items.map(item => (
+        // Without the `key`, React will fire a key warning
+        <React.Fragment key={item.id}>
+          <dt>{item.term}</dt>
+          <dd>{item.description}</dd>
+        </React.Fragment>
+      ))}
+    </dl>
+  );
+}
+```
+
+## Higher-Order Components
+
+```jsx
+const EnhancedComponent = higherOrderComponent(WrappedComponent);
+```
+
+```jsx
+class CommentList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      // "DataSource" is some global data source
+      comments: DataSource.getComments()
+    };
+  }
+
+  componentDidMount() {
+    // Subscribe to changes
+    DataSource.addChangeListener(this.handleChange);
+  }
+
+  componentWillUnmount() {
+    // Clean up listener
+    DataSource.removeChangeListener(this.handleChange);
+  }
+
+  handleChange() {
+    // Update component state whenever the data source changes
+    this.setState({
+      comments: DataSource.getComments()
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        {this.state.comments.map((comment) => (
+          <Comment comment={comment} key={comment.id} />
+        ))}
+      </div>
+    );
+  }
+}
+```
+
+```jsx
+class BlogPost extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      blogPost: DataSource.getBlogPost(props.id)
+    };
+  }
+
+  componentDidMount() {
+    DataSource.addChangeListener(this.handleChange);
+  }
+
+  componentWillUnmount() {
+    DataSource.removeChangeListener(this.handleChange);
+  }
+
+  handleChange() {
+    this.setState({
+      blogPost: DataSource.getBlogPost(this.props.id)
+    });
+  }
+
+  render() {
+    return <TextBlock text={this.state.blogPost} />;
+  }
+}
+```
+
+```jsx
+const CommentListWithSubscription = withSubscription(
+  CommentList,
+  (DataSource) => DataSource.getComments()
+);
+
+const BlogPostWithSubscription = withSubscription(
+  BlogPost,
+  (DataSource, props) => DataSource.getBlogPost(props.id)
+);
+```
+
+```jsx
+// This function takes a component...
+function withSubscription(WrappedComponent, selectData) {
+  // ...and returns another component...
+  return class extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleChange = this.handleChange.bind(this);
+      this.state = {
+        data: selectData(DataSource, props)
+      };
+    }
+
+    componentDidMount() {
+      // ... that takes care of the subscription...
+      DataSource.addChangeListener(this.handleChange);
+    }
+
+    componentWillUnmount() {
+      DataSource.removeChangeListener(this.handleChange);
+    }
+
+    handleChange() {
+      this.setState({
+        data: selectData(DataSource, this.props)
+      });
+    }
+
+    render() {
+      // ... and renders the wrapped component with the fresh data!
+      // Notice that we pass through any additional props
+      return <WrappedComponent data={this.state.data} {...this.props} />;
+    }
+  };
+}
+```
+
+### Don’t Mutate the Original Component. Use Composition.
+
+```jsx
+function logProps(InputComponent) {
+  InputComponent.prototype.componentDidUpdate = function(prevProps) {
+    console.log('Current props: ', this.props);
+    console.log('Previous props: ', prevProps);
+  };
+  // The fact that we're returning the original input is a hint that it has
+  // been mutated.
+  return InputComponent;
+}
+
+// EnhancedComponent will log whenever props are received
+const EnhancedComponent = logProps(InputComponent);
+```
+
+```jsx
+function logProps(WrappedComponent) {
+  return class extends React.Component {
+    componentDidUpdate(prevProps) {
+      console.log('Current props: ', this.props);
+      console.log('Previous props: ', prevProps);
+    }
+    render() {
+      // Wraps the input component in a container, without mutating it. Good!
+      return <WrappedComponent {...this.props} />;
+    }
+  }
+}
+```
+
+### Convention: Pass Unrelated Props Through to the Wrapped Component
+
+```jsx
+render() {
+  // Filter out extra props that are specific to this HOC and shouldn't be
+  // passed through
+  const { extraProp, ...passThroughProps } = this.props;
+
+  // Inject props into the wrapped component. These are usually state values or
+  // instance methods.
+  const injectedProp = someStateOrInstanceMethod;
+
+  // Pass props to wrapped component
+  return (
+    <WrappedComponent
+      injectedProp={injectedProp}
+      {...passThroughProps}
+    />
+  );
+}
+```
+
+### Convention: Maximizing Composability
+
+```jsx
+const NavbarWithRouter = withRouter(Navbar);
+```
+
+```jsx
+const CommentWithRelay = Relay.createContainer(Comment, config);
+```
+
+```jsx
+// React Redux's `connect`
+const ConnectedComment = connect(commentSelector, commentActions)(CommentList);
+```
+
+```jsx
+// connect is a function that returns another function
+const enhance = connect(commentListSelector, commentListActions);
+// The returned function is a HOC, which returns a component that is connected
+// to the Redux store
+const ConnectedComment = enhance(CommentList);
+```
+
+```jsx
+// Instead of doing this...
+const EnhancedComponent = withRouter(connect(commentSelector)(WrappedComponent))
+
+// ... you can use a function composition utility
+// compose(f, g, h) is the same as (...args) => f(g(h(...args)))
+const enhance = compose(
+  // These are both single-argument HOCs
+  withRouter,
+  connect(commentSelector)
+)
+const EnhancedComponent = enhance(WrappedComponent)
+```
+
+### Convention: Wrap the Display Name for Easy Debugging
+
+```jsx
+function withSubscription(WrappedComponent) {
+  class WithSubscription extends React.Component {/* ... */}
+  WithSubscription.displayName = `WithSubscription(${getDisplayName(WrappedComponent)})`;
+  return WithSubscription;
+}
+
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+```
+
+### Caveats
+
+#### Don’t Use HOCs Inside the render Method
+
+#### Static Methods Must Be Copied Over
+
+#### Refs Aren’t Passed Through
