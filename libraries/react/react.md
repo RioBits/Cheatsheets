@@ -1,8 +1,29 @@
-# React.js Library
+aa# React.js Library
 
 > **React** is a JavaScript library for building user interfaces.
 
-## Add React to a Website
+## Sections
+
+- <a href='#01'>Add React to a Website</a>
+- <a href='#02'>Create React App</a>
+- <a href='#03'>CDN Links</a>
+- <a href='#04'>The smallest React example</a>
+- <a href='#05'>JSX</a>
+- <a href='#06'>Rendering Elements</a>
+- <a href='#07'>Components and Props</a>
+- <a href='#08'>State and Lifecycle</a>
+- <a href='#09'>Handling Events</a>
+- <a href='#10'>Conditional Rendering</a>
+- <a href='#11'>Lists and Keys</a>
+- <a href='#12'>Forms</a>
+- <a href='#13'>Lifting State Up</a>
+- <a href='#14'>Composition vs Inheritance</a>
+- <a href='#15'>Context</a>
+- <a href='#16'>Forwarding Refs</a>
+- <a href='#17'>Fragments</a>
+- <a href='#18'>Higher-Order Components</a>
+
+<h2 id="01">Add React to a Website</h2>
 
 ```html
 <!DOCTYPE html>
@@ -54,7 +75,7 @@ React With JSX
 return <button onClick={() => this.setState({ liked: true })}>Like</button>
 ```
 
-## Create React App
+<h2 id="02">Create React App</h2>
 
 using npm
 
@@ -72,7 +93,7 @@ cd my-app
 yarn start
 ```
 
-## CDN Links
+<h2 id="03">CDN Links</h2>
 
 development
 
@@ -100,13 +121,13 @@ production
 ></script>
 ```
 
-## The smallest React example
+<h2 id="04">The smallest React example</h2>
 
 ```jsx
 ReactDOM.render(<h1>Hello, world!</h1>, document.getElementById('root'))
 ```
 
-## JSX
+<h2 id="05">JSX</h2>
 
 ### Consider this variable declaration
 
@@ -210,7 +231,7 @@ const element = React.createElement(
 )
 ```
 
-## Rendering Elements
+<h2 id="06">Rendering Elements</h2>
 
 ### Rendering an Element into the DOM
 
@@ -249,7 +270,7 @@ setInterval(tick, 1000)
 
 React DOM compares the element and its children to the previous one, and only applies the DOM updates necessary to bring the DOM to the desired state.
 
-## Components and Props
+<h2 id="07">Components and Props</h2>
 
 > Components let you split the UI into independent, reusable pieces, and think about each piece in isolation. This page provides an introduction to the idea of components.
 
@@ -354,7 +375,7 @@ ReactDOM.render(
 
 > Props are Read-Only
 
-## State and Lifecycle
+<h2 id="08">State and Lifecycle</h2>
 
 ### Adding Local State to a Class
 
@@ -523,7 +544,7 @@ class Clock extends React.Component {
 ReactDOM.render(<Clock />, document.getElementById('root'))
 ```
 
-## Handling Events
+<h2 id="09">Handling Events</h2>
 
 ```jsx
 <button onClick={activateLasers}>Activate Lasers</button>
@@ -581,7 +602,7 @@ ReactDOM.render(<Toggle />, document.getElementById('root'))
 <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
 ```
 
-## Conditional Rendering
+<h2 id="10">Conditional Rendering</h2>
 
 ```jsx
 function UserGreeting(props) {
@@ -760,7 +781,7 @@ class Page extends React.Component {
 ReactDOM.render(<Page />, document.getElementById('root'))
 ```
 
-## Lists and Keys
+<h2 id='11'>Lists and Keys</h2>
 
 ```jsx
 const numbers = [1, 2, 3, 4, 5]
@@ -900,7 +921,7 @@ ReactDOM.render(
 )
 ```
 
-## Forms
+<h2 id='12'>Forms</h2>
 
 ### Controlled Components
 
@@ -1129,7 +1150,7 @@ setTimeout(function () {
 }, 1000)
 ```
 
-## Lifting State Up
+<h2 id='13'>Lifting State Up</h2>
 
 ```jsx
 function BoilingVerdict(props) {
@@ -1308,7 +1329,7 @@ class Calculator extends React.Component {
 ReactDOM.render(<Calculator />, document.getElementById('root'))
 ```
 
-## Composition vs Inheritance
+<h2 id='14'>Composition vs Inheritance</h2>
 
 ### Containment
 
@@ -1444,7 +1465,7 @@ Props and composition give you all the flexibility you need to customize a compo
 
 If you want to reuse non-UI functionality between components, we suggest extracting it into a separate JavaScript module. The components may import it and use that function, object, or a class, without extending it.
 
-## Context
+<h2 id='15'>Context</h2>
 
 ```jsx
 // Context lets us pass a value deep into the component tree
@@ -1792,7 +1813,7 @@ class App extends React.Component {
 }
 ```
 
-## Forwarding Refs
+<h2 id='16'>Forwarding Refs</h2>
 
 ### Forwarding refs to DOM components
 
@@ -1925,7 +1946,7 @@ function logProps(Component) {
 }
 ```
 
-## Fragments
+<h2 id='17'>Fragments</h2>
 
 ```jsx
 render() {
@@ -1972,7 +1993,7 @@ function Glossary(props) {
 }
 ```
 
-## Higher-Order Components
+<h2 id='18'>Higher-Order Components</h2>
 
 ```jsx
 const EnhancedComponent = higherOrderComponent(WrappedComponent);
