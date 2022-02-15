@@ -1,5 +1,7 @@
 # React.js Library
 
+Another cool cheatsheet 🔗 https://www.freecodecamp.org/news/the-react-cheatsheet
+
 > **React** is a JavaScript library for building user interfaces.
 
 ## Sections
