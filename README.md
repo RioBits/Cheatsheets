@@ -16,6 +16,4 @@
 
 - 💻 databases
   - [MongoDB](./databases/mongodb.md)
-
-- ✨ Other
-  - [Nodejs](./other/nodejs.md)
+  
