@@ -140,7 +140,7 @@ db.<collection>.find().pretty()
 
 Get element inside array
 ```bash
-db.<collection>.find("arrayName": "element").pretty()
+db.<collection>.find({"arrayName": "element"}).pretty()
 ```
 
 If you got a lot of data you can use this command to get the next page (Iterates through a cursor)
