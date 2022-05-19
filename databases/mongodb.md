@@ -138,7 +138,7 @@ Get data with better shape
 db.<collection>.find().pretty()
 ```
 
-Get element inside array
+Find document using element inside array
 ```bash
 db.<collection>.find({"arrayName": "element"}).pretty()
 ```
