@@ -98,6 +98,11 @@ Use/Create database
 use <database name>
 ```
 
+Remove database
+```
+db.dropDatabase()
+```
+
 Show collections
 ```
 show collections
