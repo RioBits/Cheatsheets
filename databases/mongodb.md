@@ -128,7 +128,7 @@ Get specific documents
 db.<collection>.find({"state": "NY"})
 ```
 
-Number of All
+Number of all documents
 ```bash
 db.<collection>.find().count()
 ```
